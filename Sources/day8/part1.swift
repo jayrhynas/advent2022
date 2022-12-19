@@ -1,11 +1,12 @@
 import ArgumentParser
+import Util
 
 struct Part1: ParsableCommand {
     @OptionGroup
     var input: Input
 
     mutating func run() throws {
-        var grid = try input.readInput()
+        var grid = try input.readGrid()
 
         for r in grid.rows {
             grid.checkVisible(dir: .w, rows: [r], cols: grid.cols)
