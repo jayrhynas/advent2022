@@ -19,7 +19,7 @@ let package = Package(
                 "Util",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
-            exclude: ["inputs"]),
+            exclude: ["inputs", "README.md"]),
         .executableTarget(
             name: "day8",
             dependencies: [
