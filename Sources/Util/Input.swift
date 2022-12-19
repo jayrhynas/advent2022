@@ -11,7 +11,7 @@ public struct Input: ParsableArguments {
         try String(decoding: Data(contentsOf: URL(fileURLWithPath: filename)), as: UTF8.self)
     }
 
-    public func readLines() throws -> [Substring] {
-        try readString().split(separator: "\n")
+    public func readLines(skipEmpty: Bool = false) throws -> [Substring] {
+        try readString().split(separator: "\n", omittingEmptySubsequences: skipEmpty)
     }
 }

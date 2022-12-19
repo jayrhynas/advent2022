@@ -14,6 +14,13 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ]),
         .executableTarget(
+            name: "day1",
+            dependencies: [
+                "Util",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ],
+            exclude: ["inputs"]),
+        .executableTarget(
             name: "day8",
             dependencies: [
                 "Util",
