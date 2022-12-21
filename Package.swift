@@ -2,6 +2,8 @@
 
 import PackageDescription
 
+let excludes = ["inputs", "README.md"]
+
 let package = Package(
     name: "advent2022",
     dependencies: [
@@ -19,13 +21,20 @@ let package = Package(
                 "Util",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
-            exclude: ["inputs", "README.md"]),
+            exclude: excludes),
+        .executableTarget(
+            name: "day2",
+            dependencies: [
+                "Util",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ],
+            exclude: excludes),
         .executableTarget(
             name: "day8",
             dependencies: [
                 "Util",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
-            exclude: ["inputs"]),
+            exclude: excludes),
     ]
 )
