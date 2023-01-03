@@ -6,6 +6,7 @@ let excludes = ["inputs", "README.md"]
 
 let package = Package(
     name: "advent2022",
+    platforms: [.macOS(.v13)],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0")
     ],
@@ -31,6 +32,13 @@ let package = Package(
             exclude: excludes),
         .executableTarget(
             name: "day3",
+            dependencies: [
+                "Util",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ],
+            exclude: excludes),
+        .executableTarget(
+            name: "day4",
             dependencies: [
                 "Util",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
