@@ -36,6 +36,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
             exclude: excludes),
+        // <#day#>
         .executableTarget(
             name: "day8",
             dependencies: [

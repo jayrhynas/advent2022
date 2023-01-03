@@ -4,7 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-DAY=${1}
+DAY=${1:-}
 
 if [[ -z $DAY ]]; then
     read -r -p 'Which day? ' DAY
@@ -22,15 +22,18 @@ cp -r "${SCRIPT_DIR}/Sources/.template" "${DEST_DIR}"
 sed -i '' 's/<#day#>/Day'"${DAY}"'/' "${DEST_DIR}/day.swift"
 mv "${DEST_DIR}/day.swift" "${DEST_DIR}/day${DAY}.swift"
 
-echo "Add this to Package.swift"
+# echo "Add this to Package.swift"
 
-cat <<EOF
-
+cat <<EOF | sed -i '' '/<#day#>/ { 
+r/dev/stdin
+N
+}' "${SCRIPT_DIR}/Package.swift"
         .executableTarget(
-            name: "day3",
+            name: "day${DAY}",
             dependencies: [
                 "Util",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
             exclude: excludes),
 EOF
+
