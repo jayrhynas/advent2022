@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+DAY=${1:-}
+PART=${2:-}
+INFILE=${3:-}
+
+while [[ -z $DAY ]]; do
+    read -r -p 'Which day? ' DAY
+done
+
+if [[ -z $PART ]]; then
+    read -r -p 'Which part? [1] ' PART
+    PART=${PART:-1}
+fi
+
+if [[ -z $INFILE ]]; then
+    read -r -p 'Which input? [sample.txt] ' INFILE
+    INFILE=${INFILE:-sample.txt}
+fi
+
+DEST_DIR="${SCRIPT_DIR}/Sources/day${DAY}"
+
+if [[ ! -d "$DEST_DIR" ]]; then
+    echo "error: ${DEST_DIR} doesn't exist"
+    exit 1
+fi
+
+while sleep 0.2; do
+    find ${DEST_DIR} -type f | entr -d -c bash -c "swift run day${DAY} part${PART} ${DEST_DIR}/inputs/${INFILE}"
+done
