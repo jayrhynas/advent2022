@@ -8,7 +8,8 @@ let package = Package(
     name: "advent2022",
     platforms: [.macOS(.v13)],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0")
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0"),
+        .package(url: "https://github.com/pointfreeco/swift-parsing", from: "0.11.0")
     ],
     targets: [
         .target(
@@ -42,6 +43,14 @@ let package = Package(
             dependencies: [
                 "Util",
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ],
+            exclude: excludes),
+        .executableTarget(
+            name: "day5",
+            dependencies: [
+                "Util",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Parsing", package: "swift-parsing")
             ],
             exclude: excludes),
         // <#day#>
