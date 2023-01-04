@@ -60,6 +60,14 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser")
             ],
             exclude: excludes),
+        .executableTarget(
+            name: "day7",
+            dependencies: [
+                "Util",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Parsing", package: "swift-parsing")
+            ],
+            exclude: excludes),
         // <#day#>
         .executableTarget(
             name: "day8",
