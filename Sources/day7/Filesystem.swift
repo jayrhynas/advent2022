@@ -99,6 +99,16 @@ extension Filesystem.Node {
 
         return found
     }
+
+    func smallestDir(minFilesize: Int) -> Filesystem.Node {
+        let childDirs = self.children.filter { child in
+            child.type == .dir && child.size >= minFilesize 
+        }
+
+        return childDirs.map { 
+            $0.smallestDir(minFilesize: minFilesize)
+        }.min { $0.size < $1.size } ?? self
+    }
 }
 
 extension Filesystem: CustomStringConvertible {
