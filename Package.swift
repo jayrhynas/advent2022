@@ -91,6 +91,14 @@ let package = Package(
                 .product(name: "Parsing", package: "swift-parsing")
             ],
             exclude: excludes),
+        .executableTarget(
+            name: "day11",
+            dependencies: [
+                "Util",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+                .product(name: "Parsing", package: "swift-parsing")
+            ],
+            exclude: excludes),
         // <#day#>
     ]
 )
