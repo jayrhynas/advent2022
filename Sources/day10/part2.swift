@@ -6,6 +6,9 @@ struct Part2: ParsableCommand {
     var input: Input
 
     mutating func run() throws {
-        
+        let instructions = try input.readInstructions()
+
+        let cpu = CPU(instructions: instructions, recording: nil)
+        cpu.run()
     }
 }

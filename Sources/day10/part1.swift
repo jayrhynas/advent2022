@@ -8,10 +8,8 @@ struct Part1: ParsableCommand {
     mutating func run() throws {
         let instructions = try input.readInstructions()
 
-        let cpu = CPU()
-
-        cpu.run(instructions)
-
+        let cpu = CPU(instructions: instructions, crt: nil)
+        cpu.run()
         print(cpu.signalStrengths.reduce(0, +))
     }
 }
