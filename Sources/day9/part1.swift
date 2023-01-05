@@ -16,7 +16,7 @@ struct Part1: ParsableCommand {
             rope.move(move)
         }
 
-        let visits = Set(rope.path.map { $0.tail })
+        let visits = Set(rope.path.map { $0.last! })
         print(visits.count)
     }
 }
