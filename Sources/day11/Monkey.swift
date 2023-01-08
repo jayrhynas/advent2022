@@ -27,7 +27,7 @@ class Monkey {
         self.targets = (trueTarget, falseTarget)
     }
 
-    func inspect(_ item: Int) -> (Int, Int) {
+    func inspect(_ item: Int, relief: Int = 3) -> (Int, Int) {
         inspectionCount += 1
         
         var level = item
@@ -40,7 +40,7 @@ class Monkey {
         case (.mult, .value(let val)): level *= val
         }
 
-        level /= 3
+        level /= relief
 
         if level % test == 0 {
             return (level, targets.true)
@@ -61,4 +61,25 @@ extension Monkey: CustomStringConvertible {
             false: \(targets.false)
         """
     }
+}
+
+
+func monkeyBusiness(_ monkeys: [Monkey], rounds: Int, relief: Int = 3) -> Int {
+    let mod = monkeys.map(\.test).reduce(1, *)
+
+    for _ in 1...rounds {
+        for monkey in monkeys {
+            while let item = monkey.items.first {
+                monkey.items.removeFirst()
+
+                var (newItem, target) = monkey.inspect(item, relief: relief)
+                newItem = newItem % mod
+                monkeys[target].items.append(newItem)
+            }
+        }
+    }
+
+    let max2 = monkeys.sorted { $0.inspectionCount < $1.inspectionCount }.suffix(2)
+
+    return max2.map(\.inspectionCount).reduce(1, *)
 }
