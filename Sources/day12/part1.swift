@@ -17,37 +17,35 @@ func findShortestPath(in grid: Grid) -> Int {
     var queue = [grid.start][...]
 
     while let cur = queue.popFirst() {
-        let cur = (coord: cur, cell: grid[cur]!)
-
         for dir in Direction.allCases {
-            let coord = cur.coord.move(dir)
+            let coord = cur.pos.move(dir)
             
             guard let other = grid[coord] else { 
                 continue
             }
 
-            guard other.height <= cur.cell.height + 1 else {
+            guard other.height <= cur.height + 1 else {
                 continue
             }
 
             let seen = other.dist != nil
 
-            if let dist = other.dist, dist <= cur.cell.dist! {
+            if let dist = other.dist, dist <= cur.dist! {
                 continue
             }
 
-            other.previous = (cur.cell, dir.opposite)
-            other.dist = cur.cell.dist! + 1
+            other.previous = (cur, dir.opposite)
+            other.dist = cur.dist! + 1
 
             // print(grid.backtrackDescription + "\n")
 
             if !seen {
-                queue.append(coord)
+                queue.append(other)
             }
         }
     }
 
     // print(grid.pathDescription)
 
-    return grid[grid.end]!.dist!
+    return grid[grid.end.pos]!.dist!
 }

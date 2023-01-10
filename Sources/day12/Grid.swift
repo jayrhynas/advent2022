@@ -1,21 +1,21 @@
 struct Grid {
     let cells: [[Cell]]
     
-    let start: Coord
-    let end: Coord
+    let start: Cell
+    let end: Cell
 
     init(cells: [[Cell]]) {
         self.cells = cells
 
-        var start: Coord!
-        var end: Coord!
+        var start: Cell!
+        var end: Cell!
 
-        for (r, row) in cells.enumerated() {
-            for (c, cell) in row.enumerated() {
+        for row in cells {
+            for cell in row {
                 if cell.special == .start {
-                    start = Coord(r: r, c: c)
+                    start = cell
                 } else if cell.special == .end {
-                    end = Coord(r: r, c: c)
+                    end = cell
                 }
 
                 if start != nil && end != nil {
@@ -58,22 +58,22 @@ extension Grid {
     }
 
     var pathDescription: String {
-        var path: [Coord: Direction] = [end: .up]
+        var path: [Coord: Direction] = [end.pos: .up]
 
         var cur = end
-        while let (_, prevDir) = self[cur]?.previous {
-            let coord = cur.move(prevDir)
+        while let (_, prevDir) = cur.previous {
+            let coord = cur.pos.move(prevDir)
             path[coord] = prevDir.opposite
-            cur = coord
+            cur = self[coord]!
         }
 
-        return cells.enumerated().map { (r, row) in
-            row.enumerated().map { (c, cell) in
+        return cells.map { row in
+            row.map { cell in
                 if cell.special != nil {
                     return cell.description
                 }
 
-                if let dir = path[Coord(r: r, c: c)] {
+                if let dir = path[cell.pos] {
                     return dir.rawValue
                 }
 

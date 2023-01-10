@@ -2,7 +2,8 @@ class Cell: CustomStringConvertible {
     private static let ascii_a = Character("a").asciiValue!
 
     let height: UInt8
-    
+    let pos: Coord
+
     enum Special {
         case start, end
     }
@@ -12,7 +13,9 @@ class Cell: CustomStringConvertible {
     var previous: (Cell, Direction)? = nil
     var dist: Int? = nil
 
-    init(_ letter: Character) {
+    init(_ letter: Character, pos: Coord) {
+        self.pos = pos
+        
         if letter == "S" {
             height = 0
             special = .start
