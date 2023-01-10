@@ -3,31 +3,43 @@ import Parsing
 import Util
 
 extension Input {
-    static let parser = {
-        var optList: AnyParser<Substring, [Item]>?
+    static let parsers = {
+        var optList: AnyParserPrinter<Substring, [Item]>?
 
-        var item: AnyParser<Substring, Item> = OneOf {
-            Int.parser().map(Item.val)
-            Lazy { optList!.map(Item.list) }
-        }.eraseToAnyParser()
+        var item: AnyParserPrinter<Substring, Item> = OneOf {
+            Int.parser().map(.case(Item.val))
+            Lazy { optList!.map(.case(Item.list)) }
+        }.eraseToAnyParserPrinter()
 
-        let list = Parse {
+        let list = ParsePrint {
             "["
             Many { item } separator: { "," }
             "]"
-        }.eraseToAnyParser()
+        }.eraseToAnyParserPrinter()
         optList = list
 
-        return Many {
-            list
-            "\n"
-            list
-        } separator: {
-            "\n\n"
-        }
+        return (
+            item: item,
+            pairs: Many {
+                    list
+                    "\n"
+                    list
+                } separator: {
+                    "\n\n"
+                },
+            packets: Many {
+                    list
+                } separator: {
+                    Prefix { $0 == "\n" }
+                }
+        )
     }()
 
     func readPairs() throws -> [(left: [Item], right: [Item])] {
-        try Self.parser.parse(readString())
+        try Self.parsers.pairs.parse(readString())
+    }
+
+    func readPackets() throws -> [[Item]] {
+        try Self.parsers.packets.parse(readString())
     }
 }

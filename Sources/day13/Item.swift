@@ -40,3 +40,22 @@ func compare(_ lhs: Item, _ rhs: Item) -> ComparisonResult {
         return compare(lhs, rhs)
     }
 }
+
+extension Item: Comparable, Equatable {    
+    static func <(lhs: Item, rhs: Item) -> Bool {
+        compare(lhs, rhs) == .orderedAscending
+    }
+
+    static func ==(lhs: Item, rhs: Item) -> Bool {
+        switch (lhs, rhs) {
+        case let (.val(lhs), .val(rhs)):
+            return lhs == rhs
+
+        case let (.list(lhs), .list(rhs)):
+            return lhs == rhs
+
+        default:
+            return false
+        }
+    }
+}
