@@ -1,4 +1,4 @@
-class Cell: CustomStringConvertible {
+class Cell: Hashable, CustomStringConvertible {
     private static let ascii_a = Character("a").asciiValue!
 
     let height: UInt8
@@ -15,7 +15,7 @@ class Cell: CustomStringConvertible {
 
     init(_ letter: Character, pos: Coord) {
         self.pos = pos
-        
+
         if letter == "S" {
             height = 0
             special = .start
@@ -38,5 +38,13 @@ class Cell: CustomStringConvertible {
         case .end:   return "E"
         default:     return "\(Unicode.Scalar(height + Self.ascii_a))"
         }
+    }
+
+    static func==(lhs: Cell, rhs: Cell) -> Bool {
+        lhs.pos == rhs.pos
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(pos)
     }
 }

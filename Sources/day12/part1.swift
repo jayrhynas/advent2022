@@ -13,7 +13,7 @@ struct Part1: ParsableCommand {
 }
 
 // breadth-first-seach + dynamic programming
-func findShortestPath(in grid: Grid) -> Int {
+private func findShortestPath(in grid: Grid) -> Int {
     var queue = [grid.start][...]
 
     while let cur = queue.popFirst() {
