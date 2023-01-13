@@ -1,8 +1,8 @@
+import struct Util.Coord
+
 enum Dir: String, CaseIterable {
     case n, e, s, w
 }
-
-typealias Coord = (r: Int, c: Int)
 
 struct Grid {
     private (set) var trees: [Tree]

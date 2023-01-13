@@ -1,3 +1,5 @@
+import struct Util.Coord
+
 struct Grid {
     let cells: [[Cell]]
     
@@ -62,7 +64,7 @@ extension Grid {
 
         var cur = end
         while let (_, prevDir) = cur.previous {
-            let coord = cur.pos.move(prevDir)
+            let coord = cur.pos + prevDir.movement
             path[coord] = prevDir.opposite
             cur = self[coord]!
         }

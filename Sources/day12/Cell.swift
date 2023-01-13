@@ -1,3 +1,5 @@
+import struct Util.Coord
+
 class Cell: Hashable, CustomStringConvertible {
     private static let ascii_a = Character("a").asciiValue!
 

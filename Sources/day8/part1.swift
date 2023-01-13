@@ -32,8 +32,10 @@ private extension Grid {
         var maxHeight: Int = -1
         for r in rows {
             for c in cols {
-                guard let height = self[(r, c)]?.height else { continue }
-                self[(r, c)]?.visible[dir] = height > maxHeight
+                let coord = Coord(r, c)
+
+                guard let height = self[coord]?.height else { continue }
+                self[coord]?.visible[dir] = height > maxHeight
                 maxHeight = max(height, maxHeight)
             }
         }

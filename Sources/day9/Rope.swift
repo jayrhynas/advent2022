@@ -1,3 +1,5 @@
+import struct Util.Coord
+
 struct Rope {
     static var trace = false
 

@@ -28,7 +28,7 @@ private func findShortestPath(in grid: Grid) -> Int {
         }
 
         for dir in Direction.allCases {
-            let coord = cur.pos.move(dir)
+            let coord = cur.pos + dir.movement
             
             guard let other = grid[coord],
                 other.height >= cur.height - 1,

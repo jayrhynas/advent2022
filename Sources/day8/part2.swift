@@ -12,7 +12,7 @@ struct Part2: ParsableCommand {
 
         for r in grid.rows {
             for c in grid.cols {
-                let loc = (r, c)
+                let loc = Coord(r, c)
 
                 var score = 1
                 for dir in Dir.allCases {
@@ -30,10 +30,10 @@ struct Part2: ParsableCommand {
 extension Dir {
     var movement: Coord {
         switch self {
-        case .n: return (-1,  0)
-        case .e: return ( 0,  1)
-        case .s: return ( 1,  0)
-        case .w: return ( 0, -1)
+        case .n: return Coord(-1,  0)
+        case .e: return Coord( 0,  1)
+        case .s: return Coord( 1,  0)
+        case .w: return Coord( 0, -1)
         }
     }
 }

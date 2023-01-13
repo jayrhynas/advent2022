@@ -18,7 +18,7 @@ private func findShortestPath(in grid: Grid) -> Int {
 
     while let cur = queue.popFirst() {
         for dir in Direction.allCases {
-            let coord = cur.pos.move(dir)
+            let coord = cur.pos + dir.movement
             
             guard let other = grid[coord] else { 
                 continue

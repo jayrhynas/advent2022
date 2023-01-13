@@ -1,3 +1,5 @@
+import struct Util.Coord
+
 typealias Move = (Direction, Int)
 
 enum Direction: String, CaseIterable {
@@ -8,10 +10,10 @@ enum Direction: String, CaseIterable {
 
     var movement: Coord {
         switch self {
-        case .up:    return Coord(row: -1, col:  0)
-        case .down:  return Coord(row:  1, col:  0)
-        case .left:  return Coord(row:  0, col: -1)
-        case .right: return Coord(row:  0, col:  1)
+        case .up:    return Coord(-1,  0)
+        case .down:  return Coord( 1,  0)
+        case .left:  return Coord( 0, -1)
+        case .right: return Coord( 0,  1)
         }
     }
 }
