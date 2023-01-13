@@ -1,6 +1,6 @@
 import ArgumentParser
 import Parsing
-import Util
+import struct Util.Input
 
 extension Input {
     static let parser = {

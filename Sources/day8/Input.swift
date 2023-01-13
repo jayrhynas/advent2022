@@ -1,4 +1,4 @@
-import Util
+import struct Util.Input
 
 extension Input {
     func readGrid() throws -> Grid {

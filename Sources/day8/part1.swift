@@ -1,5 +1,6 @@
 import ArgumentParser
-import Util
+import struct Util.Coord
+import struct Util.Input
 
 struct Part1: ParsableCommand {
     @OptionGroup

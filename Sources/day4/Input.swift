@@ -1,5 +1,5 @@
 import ArgumentParser
-import Util
+import struct Util.Input
 
 extension Input {
     static let rangeRegex = #/(\d+)-(\d+),(\d+)-(\d+)/#
