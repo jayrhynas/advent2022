@@ -12,8 +12,9 @@ struct Grid {
     var cells: [Coord: Entity] = [:]
 
     let bounds: (row: ClosedRange<Int>, col: ClosedRange<Int>)
+    let hasFloor: Bool
 
-    init(rocks: [Rock], source: Coord = .init(row: 0, col: 500)) {
+    init(rocks: [Rock], hasFloor: Bool, source: Coord = .init(row: 0, col: 500)) {
         self.source = source
         cells[source] = .source
 
@@ -45,12 +46,42 @@ struct Grid {
             }
         }
 
+        self.hasFloor = hasFloor
+
+        if hasFloor {
+            maxRow += 2
+        }
+
         self.bounds = (0...maxRow, minCol...maxCol)
     }
 
     subscript(_ coord: Coord) -> Entity {
         get { cells[coord, default: .air] }
         set { cells[coord] = newValue }
+    }
+
+    mutating func fillWithSand() -> Int {
+        // print(grid)
+
+        var count = 0
+        while true {
+            let settled = generateSand()
+            // print(grid)
+
+            if !settled {
+                break
+            }
+
+            count += 1
+
+            if self[source] == .sand {
+                break
+            }
+        }
+
+        // print(grid)
+
+        return count
     }
 
     mutating func generateSand() -> Bool {
@@ -61,6 +92,10 @@ struct Grid {
         move: while true {
             for move in movements {
                 let next = sand + move
+
+                if hasFloor, next.row == bounds.row.upperBound {
+                    continue
+                }
 
                 if self[next] == .air {
                     sand = next

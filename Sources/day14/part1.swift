@@ -8,23 +8,9 @@ struct Part1: ParsableCommand {
     mutating func run() throws {
         let rocks = try input.readRocks()
         
-        var grid = Grid(rocks: rocks)
+        var grid = Grid(rocks: rocks, hasFloor: false)
 
-        // print(grid)
-
-        var count = 0
-        while true {
-            let settled = grid.generateSand()
-            // print(grid)
-
-            if !settled {
-                break
-            }
-
-            count += 1
-        }
-
-        // print(grid)
+        let count = grid.fillWithSand()
         print(count)
     }
 }
