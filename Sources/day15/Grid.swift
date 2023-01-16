@@ -68,7 +68,7 @@ struct Grid {
         self.bounds = (minY...maxY, minX...maxX)
     }
 
-    func countNonBeacons(y: Int) -> Int {
+    func occupied(inRow y: Int) -> RangeSet {
         var row = RangeSet()
 
         for sensor in self.sensors {
@@ -80,6 +80,12 @@ struct Grid {
             row.insert((sensor.pos.x - diff)...(sensor.pos.x + diff))
         }
 
+        return row
+    }
+
+    func countNonBeacons(y: Int) -> Int {
+        let row = self.occupied(inRow: y)
+
         var count = row.coveredCount
 
         for beacon in self.beacons {
@@ -89,6 +95,19 @@ struct Grid {
         }
         
         return count
+    }
+
+    func findMissingBeacon(in coordRange: ClosedRange<Int>) -> Coord? {
+        for y in coordRange {
+            let row = self.occupied(inRow: y)
+
+            if row.ranges.count > 1 {
+                let x = row.ranges[0].upperBound + 1
+                return Coord(y, x)
+            }
+        }
+
+        return nil
     }
 }
 

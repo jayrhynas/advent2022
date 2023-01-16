@@ -1,6 +1,14 @@
-extension ClosedRange {
+extension ClosedRange where Bound == Int {
+    func adjacent(with other: ClosedRange<Bound>) -> Bool {
+        let firstUpper = Swift.min(upperBound, other.upperBound)
+        let secondLower = Swift.max(lowerBound, other.lowerBound)
+
+        return secondLower - firstUpper == 1
+    }
+    
+
     func merged(with other: ClosedRange<Bound>) -> ClosedRange<Bound>? {
-        guard overlaps(other) else {
+        guard overlaps(other) || adjacent(with: other) else {
             return nil
         }
 
