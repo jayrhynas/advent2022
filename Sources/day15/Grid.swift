@@ -69,7 +69,7 @@ struct Grid {
     }
 
     func countNonBeacons(y: Int) -> Int {
-        var row: Set<Int> = []
+        var row = RangeSet()
 
         for sensor in self.sensors {
             let diff = sensor.dist - abs(sensor.pos.y - y)
@@ -77,16 +77,18 @@ struct Grid {
                 continue
             }
 
-            row.formUnion((sensor.pos.x - diff)...(sensor.pos.x + diff))
+            row.insert((sensor.pos.x - diff)...(sensor.pos.x + diff))
         }
 
-        for x in row {
-            if self.beacons.contains(Coord(y, x)) {
-                row.remove(x)
+        var count = row.coveredCount
+
+        for beacon in self.beacons {
+            if beacon.y == y, row.contains(beacon.x) {
+                count -= 1
             }
         }
-
-        return row.count
+        
+        return count
     }
 }
 
