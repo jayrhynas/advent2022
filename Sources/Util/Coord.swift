@@ -6,6 +6,10 @@ public struct Coord: Hashable {
         self.row = row
         self.col = col
     }
+
+    public init(_ row: Int, _ col: Int) {
+        self.init(row: row, col: col)
+    }
 }
 
 extension Coord {
@@ -15,9 +19,14 @@ extension Coord {
     public init(r: Int, c: Int) {
         self.init(row: r, col: c)
     }
+}
 
-    public init(_ r: Int, _ c: Int) {
-        self.init(r: r, c: c)
+extension Coord {
+    public var y: Int { get { row } set { row = newValue } }
+    public var x: Int { get { col } set { col = newValue } }
+
+    public init(y: Int, x: Int) {
+        self.init(row: y, col: x)
     }
 }
 
