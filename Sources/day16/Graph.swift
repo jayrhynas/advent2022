@@ -50,15 +50,33 @@ struct Graph {
         // printDistances()
     }
 
-    func findMaxPressure() -> Int {
-        var maxReleased = 0
-        visit(valve: "AA", minutes: 30, open: [], released: 0, maxReleased: &maxReleased)
-        return maxReleased
+    func findMaxPressure(minutes: Int = 30, agents: Int = 1) -> Int {
+        var maximums: [Set<String>: Int] = [:]
+        visit(valve: "AA", minutes: minutes, open: [], released: 0, maximums: &maximums)
+
+        var overallMax = 0
+
+        // (in the one-agent case, this will just be the original array)
+        let combinations = maximums.map { (openValves: $0.key, maxPressure: $0.value) }
+            .combinations(ofCount: agents) // get all combinations of open valves
+            .filter { valveSets in
+                // only keep combinations where no two sets of open valves have any overlap
+                valveSets.combinations(ofCount: 2).allSatisfy { 
+                    $0[0].openValves.intersection($0[1].openValves).isEmpty
+                }
+            }
+        
+        for valveSets in combinations {
+            let combinedPressure = valveSets.map(\.maxPressure).reduce(0, +)
+            overallMax = max(overallMax, combinedPressure)
+        }
+
+        return overallMax
     }
     
-    private func visit(valve: String, minutes: Int, open: Set<String>, released: Int, maxReleased: inout Int) {
-        // keep track of the max pressure released so far
-        maxReleased = max(maxReleased, released)
+    private func visit(valve: String, minutes: Int, open: Set<String>, released: Int, maximums: inout [Set<String>: Int]) {
+        // keep track of the max pressure released so far for each combination of open valves
+        maximums[open] = max(maximums[open, default: 0], released)
 
         for other in nodes where other.rate > 0 {
             // if we go to node `other` and open it, how many minutes will remain?
@@ -74,7 +92,7 @@ struct Graph {
             let newReleased = released + other.rate * remaining
 
             // keep searching from that valve with the remaining minutes and the new pressure
-            visit(valve: other.label, minutes: remaining, open: open.union([other.label]), released: newReleased, maxReleased: &maxReleased)
+            visit(valve: other.label, minutes: remaining, open: open.union([other.label]), released: newReleased, maximums: &maximums)
         }
     }
 }
