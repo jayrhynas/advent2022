@@ -7,9 +7,14 @@ struct Graph {
 
     let nodes: [Node]
     let distances: DistanceDict
+    let indices: [String: Int]
 
     init(_ nodes: [Node]) {
         self.nodes = nodes
+
+        self.indices = .init(uniqueKeysWithValues: nodes.filter { $0.rate > 0 }.enumerated().map { (idx, node) in
+            (node.label, 1 << idx)
+        })
 
         // calculate shortest distance from a node to any other node
         var distances = DistanceDict()
@@ -50,31 +55,26 @@ struct Graph {
         // printDistances()
     }
 
-    func findMaxPressure(minutes: Int = 30, agents: Int = 1) -> Int {
-        var maximums: [Set<String>: Int] = [:]
-        visit(valve: "AA", minutes: minutes, open: [], released: 0, maximums: &maximums)
+    func findMaxPressure(minutes: Int = 30, twoAgents: Bool = false) -> Int {
+        var maximums: [Int: Int] = [:]
+        visit(valve: "AA", minutes: minutes, open: 0, released: 0, maximums: &maximums)
 
-        var overallMax = 0
+        if twoAgents {
+            // try each pair of sets of open valves
+            return maximums.flatMap { (openValves1, maxPressure1) in
+                maximums.compactMap { (openValves2, maxPressure2) -> Int? in
+                    // skip pairs that have opened some of the same valves
+                    guard openValves1 & openValves2 == 0 else { return nil }
 
-        // (in the one-agent case, this will just be the original array)
-        let combinations = maximums.map { (openValves: $0.key, maxPressure: $0.value) }
-            .combinations(ofCount: agents) // get all combinations of open valves
-            .filter { valveSets in
-                // only keep combinations where no two sets of open valves have any overlap
-                valveSets.combinations(ofCount: 2).allSatisfy { 
-                    $0[0].openValves.intersection($0[1].openValves).isEmpty
+                    return maxPressure1 + maxPressure2
                 }
-            }
-        
-        for valveSets in combinations {
-            let combinedPressure = valveSets.map(\.maxPressure).reduce(0, +)
-            overallMax = max(overallMax, combinedPressure)
+            }.max()! // return the overall max
+        } else {
+            return maximums.values.max()!
         }
-
-        return overallMax
     }
     
-    private func visit(valve: String, minutes: Int, open: Set<String>, released: Int, maximums: inout [Set<String>: Int]) {
+    private func visit(valve: String, minutes: Int, open: Int, released: Int, maximums: inout [Int: Int]) {
         // keep track of the max pressure released so far for each combination of open valves
         maximums[open] = max(maximums[open, default: 0], released)
 
@@ -82,9 +82,17 @@ struct Graph {
             // if we go to node `other` and open it, how many minutes will remain?
             let remaining = minutes - distances[valve, other.label]! - 1
 
+            var _index: Int?
+            var index: Int {
+                if _index == nil {
+                    _index = self.indices[other.label]!
+                }
+                return _index!
+            }
+
             // if remaining <= 0, we can't reach it, so skip it
             // if valve is already open, skip it
-            if remaining <= 0 || open.contains(other.label) {
+            if remaining <= 0 || (open & index) != 0 {
                 continue
             }
 
@@ -92,7 +100,7 @@ struct Graph {
             let newReleased = released + other.rate * remaining
 
             // keep searching from that valve with the remaining minutes and the new pressure
-            visit(valve: other.label, minutes: remaining, open: open.union([other.label]), released: newReleased, maximums: &maximums)
+            visit(valve: other.label, minutes: remaining, open: open | index, released: newReleased, maximums: &maximums)
         }
     }
 }

@@ -9,6 +9,6 @@ struct Part2: ParsableCommand {
         let valves = try input.readValves()
         let graph = Graph(valves)
 
-        print(graph.findMaxPressure(minutes: 26, agents: 2))
+        print(graph.findMaxPressure(minutes: 26, twoAgents: true))
     }
 }
